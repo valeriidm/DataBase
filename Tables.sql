@@ -1,29 +1,28 @@
 DROP TABLE position 		CASCADE CONSTRAINTS;
 DROP TABLE qualification	CASCADE CONSTRAINTS;
 DROP TABLE staff			CASCADE CONSTRAINTS;
-DROP TABLE patientG 		CASCADE CONSTRAINTS;
+DROP TABLE patient 			CASCADE CONSTRAINTS;
 DROP TABLE hospital 		CASCADE CONSTRAINTS;
 DROP TABLE laboratory		CASCADE CONSTRAINTS;
 DROP TABLE drugstores   	CASCADE CONSTRAINTS;
 DROP TABLE drugs 			CASCADE CONSTRAINTS;
 DROP TABLE tests 			CASCADE CONSTRAINTS;
 DROP TABLE schedule 		CASCADE CONSTRAINTS;
-DROP TABLE patientF			CASCADE CONSTRAINTS;
-DROP TABLE availability		CASCADE CONSTRAINTS;
+DROP TABLE prescription 		CASCADE CONSTRAINTS;
 
 DROP SEQUENCE position_seq;
 DROP SEQUENCE qualification_seq;
 DROP SEQUENCE staff_seq;
-DROP SEQUENCE patientG_seq;
+DROP SEQUENCE patient_seq;
 DROP SEQUENCE hospital_seq;
 DROP SEQUENCE laboratory_seq;
 DROP SEQUENCE drugstores_seq;
 DROP SEQUENCE drugs_seq;
 DROP SEQUENCE tests_seq;
 DROP SEQUENCE schedule_seq;
+DROP SEQUENCE prescription_seq;
 
--- Position table
------------------
+--position table 
 CREATE TABLE position (
 id NUMBER(7) CONSTRAINT position_id_pk PRIMARY KEY,
 posdesc VARCHAR2(30)
@@ -42,8 +41,7 @@ FROM dual;
 END;
 /
 
--- Qualification table
-----------------------
+--Qualification table
 CREATE TABLE qualification (
 id NUMBER(7) CONSTRAINT qualification_id_pk PRIMARY KEY,
 qualdesc VARCHAR2(30)
@@ -62,11 +60,35 @@ FROM dual;
 END;
 /
 
--- Tests table
---------------
+--Laboratory Table
+CREATE TABLE laboratory (
+id NUMBER(5) CONSTRAINT laboratory_id_pk PRIMARY KEY,
+labname  VARCHAR2(30),
+labaddress  VARCHAR2(30),
+labphone VARCHAR2(17)
+);
+
+CREATE SEQUENCE laboratory_seq;
+
+CREATE OR REPLACE TRIGGER laboratory_bir
+BEFORE INSERT ON laboratory
+FOR EACH ROW
+
+BEGIN
+SELECT laboratory_seq.NEXTVAL
+INTO :new.id
+FROM dual;
+END;
+/
+
+--Test Table
 CREATE TABLE tests (
-id NUMBER(20) CONSTRAINT tests_id_pk PRIMARY KEY,
-res VARCHAR(1000)
+id NUMBER(20) CONSTRAINT test_id_pk PRIMARY KEY,
+res VARCHAR(1000),
+ardate DATE,
+depdate DATE,
+labid NUMBER(5),
+CONSTRAINT tests_labid_fk FOREIGN KEY (labid) REFERENCES laboratory(id)
 );
 
 CREATE SEQUENCE tests_seq;
@@ -82,13 +104,38 @@ FROM dual;
 END;
 /
 
--- Drugs table
----------------
+--Drugstore Information Table
+CREATE TABLE drugstores (
+id NUMBER(5) CONSTRAINT drugstores_id_pk PRIMARY KEY,
+name VARCHAR2(30),
+address VARCHAR2(30),
+phone VARCHAR2(17),
+openh VARCHAR(10),
+avlb avlb CHAR(1) DEFAULT 'N'
+);
+
+CREATE SEQUENCE drugstores_seq;
+
+CREATE OR REPLACE TRIGGER drugstores_bir
+BEFORE INSERT ON drugstores
+FOR EACH ROW
+
+BEGIN
+SELECT drugstores_seq.NEXTVAL
+INTO :new.id
+FROM dual;
+END;
+/
+
+--Drugs Table
 CREATE TABLE drugs (
-id NUMBER(5) CONSTRAINT drugs_id_pk PRIMARY KEY,
+id NUMBER(5) CONSTRAINT drugs_id_pk PRIMARY KEY,,
+storeid NUMBER(5),
 name VARCHAR2(30),
 dose VARCHAR2(30),
-price NUMBER(6,2)
+price NUMBER(6,2),
+drustoreid NUMBER(5),
+CONSTRAINT drugstores_drugstoreid_fk FOREIGN KEY (drugstoreid) REFERENCES drugstores(id)
 );
 
 CREATE SEQUENCE drugs_seq;
@@ -104,36 +151,81 @@ FROM dual;
 END;
 /
 
--- Patients general information table
--------------------------------------
-CREATE TABLE patientG (
-id NUMBER(11) CONSTRAINT patientG_id PRIMARY KEY,
+--Prescription table
+CREATE TABLE prescription (
+id NUMBER(10) CONSTRAINT prescription_id_pk PRIMARY KEY,
+prescription VARCHAR(100),
+drugid NUMBER(5),
+CONSTRAINT prescription_drugid_fk FOREIGN KEY (drugid) REFERENCES drugs(id)
+);
+
+CREATE SEQUENCE prescription_seq;
+
+CREATE OR REPLACE TRIGGER prescription_bir
+BEFORE INSERT ON prescription
+FOR EACH ROW
+
+BEGIN
+SELECT prescription_seq.NEXTVAL
+INTO :new.id
+FROM dual;
+END;
+/
+
+--Patient General Information table
+ CREATE TABLE patient (
+id NUMBER(11) CONSTRAINT patient_id_pk PRIMARY KEY,
 fname VARCHAR2(30),
 lname VARCHAR2(30),
 bdate DATE,
 email VARCHAR2(30),
 address VARCHAR2(30),
 zip VARCHAR2(7),
+phone VARCHAR2(17),
 medcard VARCHAR(15),
-inssurance VARCHAR(300)
+inssurance VARCHAR(300),
+anamnesis VARCHAR(3000),
+diagnosis VARCHAR(1000),
+prescid NUMBER(10),
+CONSTRAINT patient_prescid_fk FOREIGN KEY (prescid) REFERENCES prescription(id)
 );
 
-CREATE SEQUENCE patientG_seq;
+CREATE SEQUENCE patient_seq;
 
-CREATE OR REPLACE TRIGGER patientG_bir
-BEFORE INSERT ON patientG
+CREATE OR REPLACE TRIGGER patient_bir
+BEFORE INSERT ON patient
 FOR EACH ROW
 
 BEGIN
-SELECT patientG_seq.NEXTVAL
+SELECT patient_seq.NEXTVAL
 INTO :new.id
 FROM dual;
 END;
 /
 
 
--- Staff information
---------------------
+--Hospital Information Table
+CREATE TABLE hospital (
+id NUMBER(5) CONSTRAINT hospital_id_pk PRIMARY KEY,
+name VARCHAR2(30),
+address VARCHAR2(30),
+phone VARCHAR2(17)
+);
+
+CREATE SEQUENCE hospital_seq;
+
+CREATE OR REPLACE TRIGGER hospital_bir
+BEFORE INSERT ON hospital
+FOR EACH ROW
+
+BEGIN
+SELECT hospital_seq.NEXTVAL
+INTO :new.id
+FROM dual;
+END;
+/
+
+--Staff Information
 CREATE TABLE staff (
 id NUMBER(7) CONSTRAINT staff_id_pk PRIMARY KEY,
 fname VARCHAR2(30),
@@ -145,8 +237,10 @@ zip VARCHAR2(7),
 phone VARCHAR2(17),
 posid NUMBER(7),
 qualid NUMBER(7),
+hospid NUMBER(5),
 CONSTRAINT staff_pos_fk FOREIGN KEY (posid) REFERENCES position(id),
-CONSTRAINT staff_qual_fk FOREIGN KEY (qualid) REFERENCES qualification(id)
+CONSTRAINT staff_qual_fk FOREIGN KEY (qualid) REFERENCES qualification(id),
+CONSTRAINT staff_hosp_fk FOREIGN KEY (hospid) REFERENCES hospital(id)
 );
 
 CREATE SEQUENCE staff_seq;
@@ -163,109 +257,19 @@ END;
 /
 
 
--- Drugstores informations
---------------------------
-CREATE TABLE drugstores (
-id NUMBER(5) CONSTRAINT drugstores_id_pk PRIMARY KEY,
-name VARCHAR2(30),
-address VARCHAR2(30),
-phone VARCHAR2(17),
-openh VARCHAR(10),
-drugid NUMBER(5),
-CONSTRAINT drugstores_drug_fk FOREIGN KEY (drugid) REFERENCES drugs(id)
-);
-
-CREATE SEQUENCE drugstores_seq;
-
-CREATE OR REPLACE TRIGGER drugstores_bir
-BEFORE INSERT ON drugstores
-FOR EACH ROW
-
-BEGIN
-SELECT drugstores_seq.NEXTVAL
-INTO :new.id
-FROM dual;
-END;
-/
 
 
--- Availability of drugs in the drugstores
-----------------------------------------------
-CREATE TABLE availability(
-storeid NUMBER(5),
-drugid NUMBER(5),
-avlb CHAR(1) DEFAULT 'N',
-CONSTRAINT availability_storid_drugid_pk PRIMARY KEY (storeid, drugid),
-CONSTRAINT availability_storid_fk FOREIGN KEY (storeid) REFERENCES drugstores (id),
-CONSTRAINT availability_drugid_fk FOREIGN KEY (drugid) REFERENCES drugs (id)
-);
-
-
--- hospital information table
------------------------------
-CREATE TABLE hospital (
-id NUMBER(5) CONSTRAINT hospital_id_pk PRIMARY KEY,
-name VARCHAR2(30),
-address VARCHAR2(30),
-phone VARCHAR2(17),
-staffid NUMBER(7),
-CONSTRAINT hospital_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id)
-);
-
-CREATE SEQUENCE hospital_seq;
-
-CREATE OR REPLACE TRIGGER hospital_bir
-BEFORE INSERT ON hospital
-FOR EACH ROW
-
-BEGIN
-SELECT hospital_seq.NEXTVAL
-INTO :new.id
-FROM dual;
-END;
-/
-
--- laboratory table
--------------------
-CREATE TABLE laboratory (
-id NUMBER(5) CONSTRAINT laboratory_id_pk PRIMARY KEY,
-ardate DATE,
-depdate DATE,
-patientid NUMBER(11),
-hospid NUMBER(5),
-staffid NUMBER(7),
-testid NUMBER(20),
-CONSTRAINT laboratory_patientid_fk FOREIGN KEY (patientid) REFERENCES patientG(id),
-CONSTRAINT laboratory_hospid_fk FOREIGN KEY (hospid) REFERENCES hospital(id),
-CONSTRAINT laboratory_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id),
-CONSTRAINT laboratory_testid_fk FOREIGN KEY (testid) REFERENCES tests(id)
-);
-
-CREATE SEQUENCE laboratory_seq;
-
-CREATE OR REPLACE TRIGGER laboratory_bir
-BEFORE INSERT ON laboratory
-FOR EACH ROW
-
-BEGIN
-SELECT laboratory_seq.NEXTVAL
-INTO :new.id
-FROM dual;
-END;
-/
-
-
--- Schedule table
------------------
+--Schedule Table
 CREATE TABLE schedule (
-id NUMBER(7) CONSTRAINT schedule_id_pk PRIMARY KEY,
-datenext DATE,
-dateprev DATE,
-history VARCHAR(1000),
-staffid NUMBER(7),
+id NUMBER(20), 
 patientid NUMBER(11),
+sdate DATE,
+staffid NUMBER(7),
+testid NUMBER(11),
+CONSTRAINT schedule_id_patientid_pk PRIMARY KEY (id, patientid),
 CONSTRAINT schedule_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id),
-CONSTRAINT schedule_patientid_fk FOREIGN KEY (patientid) REFERENCES patientG(id)
+CONSTRAINT schedule_testid_fk FOREIGN KEY (testid) REFERENCES tests(id),
+CONSTRAINT schedule_patientid_fk FOREIGN KEY (patientid) REFERENCES patient(id)
 );
 
 CREATE SEQUENCE schedule_seq;
@@ -280,26 +284,6 @@ INTO :new.id
 FROM dual;
 END;
 /
-
-
--- Patient medical information table
-------------------------------------
-CREATE TABLE patientF(
-patientid NUMBER(11),
-staffid NUMBER(7),
-hospid NUMBER(5),
-testid NUMBER(20),
-schedid NUMBER(7),
-prescription VARCHAR(1000),
-anamnesis VARCHAR(3000),
-diagnosis VARCHAR(1000),
-CONSTRAINT patientF_patid_schedid_pk PRIMARY KEY (patientid, schedid),
-CONSTRAINT patientF_patientid_fk FOREIGN KEY (patientid) REFERENCES patientG(id),
-CONSTRAINT patientF_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id),
-CONSTRAINT patientF_hospid_fk FOREIGN KEY (hospid) REFERENCES hospital(id),
-CONSTRAINT patientF_schedid_fk FOREIGN KEY (schedid) REFERENCES schedule(id),
-CONSTRAINT patientF_testid_fk FOREIGN KEY (testid) REFERENCES tests(id)
-);
 
 commit;
 

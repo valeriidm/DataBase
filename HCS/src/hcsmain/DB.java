@@ -8,7 +8,7 @@ import java.util.logging.*;
 
 /**
  *
- * @author Leo Dubovyi
+ * @author Leo Dubovyi, Nadine Kovalenko, Valerii Doroshenko
  * Vanier College
  *
  * Lab #

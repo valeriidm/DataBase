@@ -8,7 +8,7 @@ import java.util.logging.*;
 
 /**
  *
- * @author Leo Dubovyi, Nadine Kovalenko, Valerii Doroshenko
+ * @author Leo Dubovyi
  * Vanier College
  *
  * Lab #
@@ -67,6 +67,24 @@ public class DB {
         return res;
     }
 
+
+        public ResultSet staff(String name, int pos){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM staff WHERE posid = ? AND lname LIKE ?");
+            ins.setInt(1, pos);
+            ins.setString(2, name+"%");
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
     public ResultSet position(int id){
         ResultSet res = null;
         try {
@@ -83,8 +101,68 @@ public class DB {
         return res;
     }
 
-     
-  
+    public ResultSet qualification(int id){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM qualification WHERE id = ?");
+            ins.setInt(1, id);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
+
+    public ResultSet staffSchedule(int staffid){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM staffSchedule WHERE staffid = ?");
+            ins.setInt(1, staffid);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
+    public ResultSet hospital(int id){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM hospital WHERE id = ?");
+            ins.setInt(1, id);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
+    public ResultSet patient(){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM patient ORDER BY id");
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return res;
+    }
 
     public void close() {
         try {

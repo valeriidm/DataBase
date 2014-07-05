@@ -16,7 +16,7 @@ import java.util.logging.*;
  */
 public class DB {
 
-    static DB db;
+    public static DB db;
     private String user;
     private String pass;
     private String url;
@@ -67,6 +67,22 @@ public class DB {
         return res;
     }
 
+     public ResultSet staff(String lName, java.util.Date bDate){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM staff WHERE bdate = ? AND lname = ?");
+            ins.setDate(1,(java.sql.Date) bDate);
+            ins.setString(2, lName);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
 
         public ResultSet staff(String name, int pos){
         ResultSet res = null;

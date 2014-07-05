@@ -368,46 +368,6 @@ VALUES ('Frank I.', 'Sims', '27-JUL-1980' ,  'FrankISims@armyspy.com' ,
 '274 67e Av Laval' , 'V7L 2C1' ,  '604-960-7790', '709809909', 4, 9, 
 'test4', 'nGxum2uOdpU=' );
 
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('John', 'Green', '18-JAN-1981',  'JohnGreenn@teleworm.us', 
-'196 Rue de la Gauchetière O Montreal', 'R1H 9C5',  '435-031-1313', '333747555', 1, 1, 
-'susanin', 'nGxum2uOdpU=');
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Robert', 'Marwell', '04-APR-1975' ,  'RobertMarwell@teleworm.com' , 
-'708 Avenue Lajeunesse Montreal', 'F2C 2H7' ,  '435-853-8838', '333987744', 1, 1, 
-'test', 'nGxum2uOdpU=' );
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Jeremy', 'Gilbert', '02-JUN-1971',  'JerGilbert@teleworm.us', 
-'196 Avenue Westmore Montreal', 'K1H 2V5',  '514-431-1313', '343747415', 1, 1, 
-'susanin', 'nGxum2uOdpU=');
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Richard', 'Morse', '24-MAY-1979' ,  'RichMorse@dayrep.com' , 
-'38 Boulvard Poirier', 'V2N 6N7' ,  '514-893-6638', '336987334', 1, 1, 
-'test', 'nGxum2uOdpU=' );
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Jill', 'Johns', '18-AUG-1961',  'JillJohns@teleworm.us', 
-'296 Boulvard Lebeau Montreal', 'M1H 1K5',  '514-451-1355', '343347535', 1, 1, 
-'susanin', 'nGxum2uOdpU=');
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Robert', 'Johns', '24-APR-1975' ,  'RobertJohns@dayrep.com' , 
-'8 Boulvard Lebeau Montreal', 'M2S 2K7' ,  '514-851-1638', '343987435', 1, 1, 
-'test', 'nGxum2uOdpU=' );
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('John', 'Jefferson', '08-AUG-1971',  'JohnJefferson@teleworm.us', 
-'196 Rue de la Gauchetière E Montreal', 'L4H 7K5',  '514-444-1981', '343722525', 1, 1, 
-'susanin', 'nGxum2uOdpU=');
-
-INSERT INTO staff (fname,lname, bdate, email, address, zip, phone, SSN, posid, qualid, login, password )
-VALUES ('Robert', 'Jefferson', '24-APR-1975' ,  'RobertJefferson@dayrep.com' , 
-'38 Avenue Henri Julien Montreal', 'V5S 2H7' ,  '514-623-2678', '344447234', 1, 1, 
-'test', 'nGxum2uOdpU=' );
-
 INSERT INTO drugstores (id, name, address, phone, openh) VALUES (1, 'Pharmaprix', '1500 Rue Sainte-Catherine Ouest', '514-933-4744', '8:00 am - 12:00 am daily');
 
 INSERT INTO drugstores (name, address, phone, openh) VALUES ('Jean Coutu' , '7145 St Denis Montreal', '514-495-8686', '9:00 am - 10:00 pm daily' );

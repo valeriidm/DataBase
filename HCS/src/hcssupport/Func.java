@@ -20,7 +20,7 @@ import javax.swing.*;
  */
 public class Func<T> {
 
-    public void fillStaff(Vector<T> doc, Vector<T> nur, Vector<T> ma) {
+    public void fillStaff(Vector<T> staff, int id) {
         ResultSet rs = DB.db.staff();
         try {
             while (rs.next()) {
@@ -28,12 +28,8 @@ public class Func<T> {
                 s.setLname(rs.getString("lname"));
                 s.setFname(rs.getString("fname"));
                 s.setbDate(rs.getDate("bDate"));
-                if (rs.getInt("posid") == 1)
-                    doc.add((T) s);
-                if (rs.getInt("posid") == 2)
-                    nur.add((T) s);
-                if (rs.getInt("posid") == 3)
-                    ma.add((T) s);
+                if (rs.getInt("posid") == id)
+                    staff.add((T) s);
             }
         } catch (SQLException ex) {
             Logger.getLogger(MedOfficer.class.getName()).log(Level.SEVERE, null, ex);
@@ -204,6 +200,40 @@ public class Func<T> {
             Logger.getLogger(MedOfficer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return info.toString();
+    }
+
+    /* Added 08.07.2014*/
+    public void checkSchedule(Vector<Staff> staff, String toMatch, JTextPane pane, JList item){
+        int ind=-1;
+        int hospId = -1;
+        int staffId = -1;
+        StringBuffer st = new StringBuffer();
+        try {
+            String lName = toMatch.substring(0, toMatch.indexOf(","));
+            String dBirth = toMatch.substring(toMatch.indexOf("(") + 1, toMatch.indexOf(")"));
+            for (int i = 0; i < staff.size(); i++)
+                if (staff.get(i).getLname().equalsIgnoreCase(lName) && staff.get(i).getbDate().toString().equalsIgnoreCase(dBirth))
+                    ind = i;
+            ResultSet res = DB.db.hospital(item.getSelectedValue().toString());
+            while (res.next()) {
+                hospId = res.getInt("id");
+            }
+            res = DB.db.staff(staff.get(ind).getLname(), staff.get(ind).getbDate());
+            while (res.next()) {
+                staffId = res.getInt("id");
+            }
+            res = DB.db.staffSchedule(staffId, hospId);
+            while (res.next()){
+                st.append(res.getString("workday"));
+                st.append("<br />");
+                st.append(res.getString("workhour"));
+                st.append("<br />");
+            }
+            pane.setText(st.toString());
+            DB.db.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Func.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // make it later

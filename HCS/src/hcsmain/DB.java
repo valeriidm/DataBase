@@ -134,14 +134,31 @@ public class DB {
     }
 
 
-    public ResultSet staffSchedule(int staffid){
+    public ResultSet staffSchedule(int staffId, int hospId){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM staffSchedule WHERE staffid = ? AND hospid = ?");
+            ins.setInt(1, staffId);
+            ins.setInt(2, hospId);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
+        public ResultSet staffSchedule(int staffId){
         ResultSet res = null;
         try {
             c = DriverManager.getConnection(url, user, pass);
             c.setAutoCommit(true);
             PreparedStatement ins =
                     c.prepareStatement("SELECT * FROM staffSchedule WHERE staffid = ?");
-            ins.setInt(1, staffid);
+            ins.setInt(1, staffId);
             res = ins.executeQuery();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -165,6 +182,23 @@ public class DB {
 
         return res;
     }
+
+     public ResultSet hospital(String name){
+        ResultSet res = null;
+        try {
+            c = DriverManager.getConnection(url, user, pass);
+            c.setAutoCommit(true);
+            PreparedStatement ins =
+                    c.prepareStatement("SELECT * FROM hospital WHERE name = ?");
+            ins.setString(1, name);
+            res = ins.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return res;
+    }
+
 
     public ResultSet patient(){
         ResultSet res = null;

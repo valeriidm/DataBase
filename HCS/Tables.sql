@@ -11,7 +11,6 @@ DROP TABLE schedule 		CASCADE CONSTRAINTS;
 DROP TABLE prescription 	CASCADE CONSTRAINTS;
 DROP TABLE staffSchedule 	CASCADE CONSTRAINTS;
 
-
 DROP SEQUENCE position_seq;
 DROP SEQUENCE qualification_seq;
 DROP SEQUENCE staff_seq;
@@ -136,7 +135,6 @@ name VARCHAR2(60),
 dose VARCHAR2(30),
 price NUMBER(6,2),
 avlb CHAR(1) DEFAULT 'N',
-remburs CHAR(1) DEFAULT 'Y',
 drugstoreid NUMBER(5),
 CONSTRAINT drugstores_drugstoreid_fk FOREIGN KEY (drugstoreid) REFERENCES drugstores(id)
 );
@@ -267,12 +265,12 @@ END;
 CREATE TABLE staffSchedule (
 staffid NUMBER(7),
 hospid NUMBER(5),
-workday VARCHAR2(4),
-workhour VARCHAR2(60),
 CONSTRAINT staffsh_hospid_fk FOREIGN KEY (hospid) REFERENCES hospital(id),
 CONSTRAINT staffsh_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id),
-CONSTRAINT staffsh_stidhid_wday_pk PRIMARY KEY (hospid, staffid, workday)
+CONSTRAINT staffsh_stidhid_pk PRIMARY KEY (hospid, staffid)
 );
+
+
 
 --Schedule Table
 CREATE TABLE schedule (
@@ -299,6 +297,7 @@ INTO :new.id
 FROM dual;
 END;
 /
+
 
 --hospitals
 INSERT INTO hospital (id, name, address, phone) VALUES (1, 'The Jewish General Hospital' , 
@@ -420,32 +419,32 @@ INSERT INTO drugstores (name, address, phone, openh) VALUES ('Brunet Pharmacies 
 INSERT INTO drugstores (name, address, phone, openh) VALUES ('Uniprix', '4349 Belanger Rue Montreal', '514-725-5273', '9:00 am - 9:00 pm daily' );
 
 
-INSERT INTO drugs (id, name, dose, price, avlb, remburs) VALUES (1, 'ACCOLATE', '20 MG TABLET', 135.80, 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('KETOCONAZOLE', '2% CREAM', 12.46, 'N', 'Y' );
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('SILDENAFIL', '20 MG TABLET', 24.31, 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('PREVACID', '15 MG CAPSULE', 300.77, 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('VASOTEC', '20 MG TABLET', 306.02, 'N', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ELMIRON', '100 MG CAPSULE', 220.31, 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('TAZORAC', '0.05% GEL' , 299.86, 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('TIZANIDINE', '2 MG TABLET', 11.45, 'N', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('TYLENOL Extra Strength' , '500 mg caplets', 12.99, 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ACCUPRIL' , '20 MG TABLET', 93.22 , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ADVAIR ' , '100-50 DISKUS ', 254.13 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ELIDEL' , '51% CREAM (VAL) ', 234.65 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ETODOLAC' , '400 MG TABLET', 56.67 , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('ELMIRON' , '100 MG CAPSULE ', 220.31 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('KEPPRA' , '1,000 MG TABLET', 848.32 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('KENALOG AEROSOL ' , 'SPRAY ', 300.06 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('PRINIVIL' , '20 MG TABLET ', 46.26 , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('PATANASE' , '0.6% NASAL SPRAY', 225.36 , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('PROGESTERONE' , '100 MG CAPSULE ', 49.00 , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('SERTRALINE HCL ' , '100 MG TABLET ', 11.35  , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('SELENIUM SULFIDE ' , '2.5% LOTION ', 16.70  , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('SUMATRIPTAN' , '6 MG/0.5 ML REFILL ', 268.77  , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('STARLIX' , '120 MG TABLET  ', 82.62  , 'Y', 'Y');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('VERAMYST' , '27.5 MCG NASAL SPRAY ', 131.48  , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('VYTORIN ' , '10-40 MG TABLET  ', 204.57  , 'Y', 'N');
-INSERT INTO drugs (name, dose, price, avlb, remburs) VALUES ('VIIBRYD' , '40 MG TABLET ', 203.66  , 'Y', 'N');
+INSERT INTO drugs (id, name, dose, price, avlb) VALUES (1, 'ACCOLATE', '20 MG TABLET', 135.80, 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('KETOCONAZOLE', '2% CREAM', 12.46, 'N' );
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('SILDENAFIL', '20 MG TABLET', 24.31, 'Y' );
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('PREVACID', '15 MG CAPSULE', 300.77, 'Y' );
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('VASOTEC', '20 MG TABLET', 306.02, 'N' );
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ELMIRON', '100 MG CAPSULE', 220.31, 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('TAZORAC', '0.05% GEL' , 299.86, 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('TIZANIDINE', '2 MG TABLET', 11.45, 'N'  );
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('TYLENOL Extra Strength' , '500 mg caplets', 12.99, 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ACCUPRIL' , '20 MG TABLET', 93.22 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ADVAIR ' , '100-50 DISKUS ', 254.13 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ELIDEL' , '51% CREAM (VAL) ', 234.65 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ETODOLAC' , '400 MG TABLET', 56.67 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('ELMIRON' , '100 MG CAPSULE ', 220.31 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('KEPPRA' , '1,000 MG TABLET', 848.32 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('KENALOG AEROSOL ' , 'SPRAY ', 300.06 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('PRINIVIL' , '20 MG TABLET ', 46.26 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('PATANASE' , '0.6% NASAL SPRAY', 225.36 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('PROGESTERONE' , '100 MG CAPSULE ', 49.00 , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('SERTRALINE HCL ' , '100 MG TABLET ', 11.35  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('SELENIUM SULFIDE ' , '2.5% LOTION ', 16.70  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('SUMATRIPTAN' , '6 MG/0.5 ML REFILL ', 268.77  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('STARLIX' , '120 MG TABLET  ', 82.62  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('VERAMYST' , '27.5 MCG NASAL SPRAY ', 131.48  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('VYTORIN ' , '10-40 MG TABLET  ', 204.57  , 'Y');
+INSERT INTO drugs (name, dose, price, avlb) VALUES ('VIIBRYD' , '40 MG TABLET ', 203.66  , 'Y');
 
 
 
@@ -533,19 +532,19 @@ INSERT INTO tests (res, ardate, depdate, labid) VALUES ('perfect', '05-JUL-2014'
 INSERT INTO tests (res, ardate, depdate, labid) VALUES ('so so', '07-JUL-2014', '08-JUL-2014', 3);
 
 -- staff schedual table
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (1,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (1,2,'Mon', '12.00-1.00 PM; 2.00-3.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (2,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (3,1,'Mon', '10.00-11.00 AM; 5.00-7.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (2,2,'Tue', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (3,3,'Wed', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (10,1,'Tue', '8.00-10.00 AM; 1.00-3.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (10,2,'Thu', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (4,4,'Wed', '11.00-12.00 AM; 2.00-4.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (4,5,'Mon', '10.00-11.00 PM; 12.00-4.00 AM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,5,'Fri', '10.00-11.00 AM; 10.00-11.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,2,'Thu', '10.00-12.00 AM; 1.00-4.00 PM');
+INSERT INTO staffSchedule VALUES (1,3);
+INSERT INTO staffSchedule VALUES (1,5);
+INSERT INTO staffSchedule VALUES (1,1);
+INSERT INTO staffSchedule VALUES (2,4);
+INSERT INTO staffSchedule VALUES (2,3);
+INSERT INTO staffSchedule VALUES (3,2);
+INSERT INTO staffSchedule VALUES (3,3);
+INSERT INTO staffSchedule VALUES (4,1);
+INSERT INTO staffSchedule VALUES (4,5);
+INSERT INTO staffSchedule VALUES (4,3);
+INSERT INTO staffSchedule VALUES (5,3);
+INSERT INTO staffSchedule VALUES (5,1);
+INSERT INTO staffSchedule VALUES (5,5);
 
 -- schedule
 INSERT INTO schedule (id, patientid, sdate, staffid, testid) 
@@ -558,8 +557,6 @@ INSERT INTO schedule (patientid, sdate, staffid, testid)
 VALUES (1, to_date('2014/08/02 13:30', 'yyyy/mm/dd hh24:mi'), 3, 4);
 INSERT INTO schedule (patientid, sdate, staffid, testid) 
 VALUES (4, to_date('2014/08/02 12:30', 'yyyy/mm/dd hh24:mi'), 2, 5);
-
-
 
 
 commit;

@@ -268,7 +268,8 @@ CREATE TABLE staffSchedule (
 staffid NUMBER(7),
 hospid NUMBER(5),
 workday VARCHAR2(4),
-workhour VARCHAR2(60),
+workhouram VARCHAR2(60),
+workhourpm VARCHAR2(60),
 CONSTRAINT staffsh_hospid_fk FOREIGN KEY (hospid) REFERENCES hospital(id),
 CONSTRAINT staffsh_staffid_fk FOREIGN KEY (staffid) REFERENCES staff(id),
 CONSTRAINT staffsh_stidhid_wday_pk PRIMARY KEY (hospid, staffid, workday)
@@ -533,19 +534,20 @@ INSERT INTO tests (res, ardate, depdate, labid) VALUES ('perfect', '05-JUL-2014'
 INSERT INTO tests (res, ardate, depdate, labid) VALUES ('so so', '07-JUL-2014', '08-JUL-2014', 3);
 
 -- staff schedual table
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (1,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (1,2,'Mon', '12.00-1.00 PM; 2.00-3.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (2,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (3,1,'Mon', '10.00-11.00 AM; 5.00-7.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (2,2,'Tue', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (3,3,'Wed', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (10,1,'Tue', '8.00-10.00 AM; 1.00-3.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (10,2,'Thu', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (4,4,'Wed', '11.00-12.00 AM; 2.00-4.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (4,5,'Mon', '10.00-11.00 PM; 12.00-4.00 AM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,5,'Fri', '10.00-11.00 AM; 10.00-11.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,1,'Mon', '9.00-10.00 AM; 9.00-10.00 PM');
-INSERT INTO staffSchedule (staffid, hospid, workday, workhour) VALUES (5,2,'Thu', '10.00-12.00 AM; 1.00-4.00 PM');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (1,1,'Mon', '9.00-10.00', '9.00-10.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (1,2,'Mon', NULL, '12.00-1.00; 2.00-3.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (2,1,'Mon', '9.00-10.00', '9.00-10.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (2,1,'Wed', '10.00-11.15', '13.00-16.45');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (3,1,'Mon', '10.00-11.00','5.00-7.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (2,2,'Tue', '9.00-10.00','9.00-10.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (3,3,'Wed', '9.00-10.00','9.00-10.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (10,1,'Tue', '8.00-10.00','1.00-3.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (10,2,'Thu', '9.00-10.00','9.00-10.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (4,4,'Wed', '11.00-12.00','2.00-4.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (4,5,'Mon', '10.00-11.00','12.00-4.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (5,5,'Fri', '10.00-11.00','10.00-11.00');
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (5,1,'Mon', '9.00-10.00; 11.00-11.45', NULL);
+INSERT INTO staffSchedule (staffid, hospid, workday, workhouram, workhourpm) VALUES (5,2,'Thu', '10.00-12.00','1.00-4.00');
 
 -- schedule
 INSERT INTO schedule (id, patientid, sdate, staffid, testid) 

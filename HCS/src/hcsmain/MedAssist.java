@@ -6,20 +6,15 @@
  */
 package hcsmain;
 
-import MedAssistPanes.ActivePatient;
-//import MedAssistPanes.Appointment;
-//import MedAssistPanes.NewPatient;
-import hcssupport.Func;
-import java.awt.*;
-import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 
 /*Medical Assistant Console */
@@ -29,95 +24,74 @@ public class MedAssist {
     private JFrame frame;
     private JTabbedPane MAPanel;
 
-    private ActivePatient actPatient;
-//    private Appointment appoint;
-//    private NewPatient nPatient;
-
 
     protected void init(){
 
         //Creating objects of frame and tabbed panels objects
         this.frame = new JFrame();
         this.MAPanel = new JTabbedPane();
-        this.actPatient=new ActivePatient (this.MAPanel);
-//        this.appoint=new Appointment (this.MAPanel);
-//        this.nPatient=new NewPatient (this.MAPanel);
-
-       
 
         //Creating of pane objects
-        JPanel ActivePatientPane = new JPanel();
-//        JPanel AppointmentPane = new JPanel();
-//        JPanel NewPatientPane = new JPanel();
+        JPanel medAssistPane = new JPanel();
+        JPanel patientGFormPane = new JPanel();
 
         //Setting names of panes
-        this.MAPanel.add("Active Patient", ActivePatientPane);
-//        this.MAPanel.add("Appiontments", AppointmentPane);
-//        this.MAPanel.add("New Patient", NewPatientPane);
-
-        //set layouts
-        ActivePatientPane.setLayout(new GridBagLayout());
-//        AppointmentPane.setLayout(new GridBagLayout());
-//        NewPatientPane.setLayout(new GridBagLayout());
-
-        String[] labels = {"Name", "Date of birth", "Social Insurance Number","General Information",
-            "Prescription", "Appointments History", "Tests"};
+        this.MAPanel.add("Medical Assistens's records", medAssistPane);
+        this.MAPanel.add("Patient General Form", patientGFormPane);
 
 
 
 /*********************************MA Frame components*****************************/
 
-        this.actPatient.ActivePatient(labels, ActivePatientPane);
-        
         //Labels
         //block one
-//        JLabel patientNameL=new JLabel("Enter the name of the Patient:");
-//        JLabel patientBirthL=new JLabel("Enter the Date of Birth of the Patient:");
-//        //block two
-//
-//
-//        //Text Areas
-//        //block one
-//        JTextArea patientNameTA = new JTextArea(2,20);
-//        patientNameTA.setBorder(BorderFactory.createLineBorder(Color.black));
-//        JTextArea patientBirthTA = new JTextArea(2,20);
-//        patientBirthTA.setBorder(BorderFactory.createLineBorder(Color.black));
-//        JTextArea appointTA = new JTextArea(5,20);
-//        appointTA.setLineWrap(true);
-//        appointTA.setOpaque(true);
-//        appointTA.setEditable(true);
-//        //Scroll Pane
-//        JScrollPane appointSP = new JScrollPane(appointTA);
-//        appointSP.setBorder(BorderFactory.createLineBorder(Color.black));
-//        appointSP.setOpaque(true);
-//        appointSP.setEnabled(true);
-//        appointSP.setSize(350, 450);
-//        appointSP.getViewport().setOpaque(false);
-//        appointSP.getHorizontalScrollBar().setOpaque(false);
-//        appointSP.getVerticalScrollBar().setOpaque(false);
-//        //block two
-////        JTextArea patientGTA = new JTextArea(15,20);
-//
-//        //Border of Pane
-//        TitledBorder title = BorderFactory.createTitledBorder(BorderFactory.
-//                             createEtchedBorder(EtchedBorder.LOWERED),"Appointments: ");
-//        appointSP.setBorder(title);
-//
-//
-//        //Placing into panes
-//        //into MA Pane
-//        //block one
-//        ActivePatientPane.setLayout(new GridBagLayout());
-//        ActivePatientPane.add(patientNameL,new GridBagConstraints(0,0,1,1,0.5,0,GridBagConstraints.CENTER,
-//                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
-//        ActivePatientPane.add(patientBirthL,new GridBagConstraints(1,0,1,1,0.5,0,GridBagConstraints.CENTER,
-//                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
-//        ActivePatientPane.add(patientNameTA,new GridBagConstraints(0,1,1,1,0.5,0,GridBagConstraints.CENTER,
-//                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
-//        ActivePatientPane.add(patientBirthTA,new GridBagConstraints(1,1,1,1,0.5,0,GridBagConstraints.CENTER,
-//                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
-//        ActivePatientPane.add(appointSP,new GridBagConstraints(0,2,2,3,1,1,GridBagConstraints.NORTHWEST,
-//                GridBagConstraints.HORIZONTAL, new Insets(15,15,15,15), 0, 0) );
+        JLabel patientNameL=new JLabel("Enter the name of the Patient:");
+        JLabel patientBirthL=new JLabel("Enter the Date of Birth of the Patient:");
+        //block two
+
+
+        //Text Areas
+        //block one
+        JTextArea patientNameTA = new JTextArea(2,20);
+        patientNameTA.setBorder(BorderFactory.createLineBorder(Color.black));
+        JTextArea patientBirthTA = new JTextArea(2,20);
+        patientBirthTA.setBorder(BorderFactory.createLineBorder(Color.black));
+        JTextArea appointTA = new JTextArea(5,20);
+        appointTA.setLineWrap(true);
+        appointTA.setOpaque(true);
+        appointTA.setEditable(true);
+        //Scroll Pane
+        JScrollPane appointSP = new JScrollPane(appointTA);
+        appointSP.setBorder(BorderFactory.createLineBorder(Color.black));
+        appointSP.setOpaque(true);
+        appointSP.setEnabled(true);
+        appointSP.setSize(350, 450);
+        appointSP.getViewport().setOpaque(false);
+        appointSP.getHorizontalScrollBar().setOpaque(false);
+        appointSP.getVerticalScrollBar().setOpaque(false);
+        //block two
+//        JTextArea patientGTA = new JTextArea(15,20);
+
+        //Border of Pane
+        TitledBorder title = BorderFactory.createTitledBorder(BorderFactory.
+                             createEtchedBorder(EtchedBorder.LOWERED),"Appointments: ");
+        appointSP.setBorder(title);
+
+
+        //Placing into panes
+        //into MA Pane
+        //block one
+        medAssistPane.setLayout(new GridBagLayout());
+        medAssistPane.add(patientNameL,new GridBagConstraints(0,0,1,1,0.5,0,GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
+        medAssistPane.add(patientBirthL,new GridBagConstraints(1,0,1,1,0.5,0,GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
+        medAssistPane.add(patientNameTA,new GridBagConstraints(0,1,1,1,0.5,0,GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
+        medAssistPane.add(patientBirthTA,new GridBagConstraints(1,1,1,1,0.5,0,GridBagConstraints.CENTER,
+                GridBagConstraints.NONE, new Insets(15,15,15,15), 0, 0) );
+        medAssistPane.add(appointSP,new GridBagConstraints(0,2,2,3,1,1,GridBagConstraints.NORTHWEST,
+                GridBagConstraints.HORIZONTAL, new Insets(15,15,15,15), 0, 0) );
         //block two
 
 //        into PatientGForm Pane
@@ -140,17 +114,5 @@ public class MedAssist {
 
     }//End init
 
-    private int checkTab() {
-        //listener to trace the number of active pane
-        final JTextField tmp = new JTextField();
-        tmp.setText(String.valueOf(0));
-        this.MAPanel.addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent e) {
-                tmp.setText(String.valueOf(MAPanel.getSelectedIndex()));
-            }
-        });
-        return Integer.parseInt(tmp.getText());
-    }
 
 }

@@ -9,7 +9,7 @@ import hcsmain.MedOfficer;
 import hcsmain.Staff;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -64,12 +64,12 @@ public class Func<T> {
                 staffTF[0].setText(res.getString("fname"));
                 staffTF[1].setText(res.getString("lname"));
                 staffTF[2].setText(res.getDate("bdate").toString());
+                staffTF[3].setText(res.getString("email"));
+                staffTF[4].setText(res.getString("address"));
+                staffTF[5].setText(res.getString("zip"));
+                staffTF[6].setText(res.getString("phone"));
                 String tmp = res.getString("SSN");
-                staffTF[3].setText(tmp.substring(0, 3) + "-" + tmp.substring(3, 6) + "-" + tmp.substring(6, 9));
-                staffTF[4].setText(res.getString("email"));
-                staffTF[5].setText(res.getString("address"));
-                staffTF[6].setText(res.getString("zip"));
-                staffTF[7].setText(res.getString("phone"));
+                staffTF[7].setText(tmp.substring(0, 3) + "-" + tmp.substring(3, 6) + "-" + tmp.substring(6, 9));
                 ResultSet rs = DB.db.position(res.getInt("posid"));
                 while (rs.next()) {
                     staffTF[8].setText(rs.getString("posdesc"));
@@ -100,17 +100,12 @@ public class Func<T> {
             ResultSet rs = DB.db.staff(staff.get(ind).getLname(), staff.get(ind).getbDate());
             while (rs.next()) {
                 ResultSet rh = DB.db.staffSchedule(rs.getInt("id"));
-                while (rh.next()) {
+                while(rh.next()){
                     ResultSet rsh = DB.db.hospital(rh.getInt("hospid"));
-                    while (rsh.next()) {
+                    while(rsh.next()){
                         StringBuffer tmp = new StringBuffer();
                         tmp.append(rsh.getString("name"));
-                        boolean exist = false;
-                        for (int i = 0; i < t.size(); i++)
-                            if (t.get(i).toString().equalsIgnoreCase(tmp.toString()))
-                                exist = true;
-                        if (!exist)
-                            t.add(tmp);
+                        t.add(tmp);
                     }
                 }
             }
@@ -208,68 +203,33 @@ public class Func<T> {
     }
 
     /* Added 08.07.2014*/
-    public void checkSchedule(Vector<Staff> staff, String toMatch, JTable pane, JList item) {
-        int ind = -1;
+    public void checkSchedule(Vector<Staff> staff, String toMatch, JTextPane pane, JList item){
+        int ind=-1;
         int hospId = -1;
         int staffId = -1;
-        for (int i = 0; i < 7; i++)
-            for (int j = 1; j < 3; j++)
-                pane.setValueAt("", i, j);
+        StringBuffer st = new StringBuffer();
         try {
-            //parse string
             String lName = toMatch.substring(0, toMatch.indexOf(","));
             String dBirth = toMatch.substring(toMatch.indexOf("(") + 1, toMatch.indexOf(")"));
-
-            //check for staff
             for (int i = 0; i < staff.size(); i++)
                 if (staff.get(i).getLname().equalsIgnoreCase(lName) && staff.get(i).getbDate().toString().equalsIgnoreCase(dBirth))
                     ind = i;
-
-            // got hospitalID
             ResultSet res = DB.db.hospital(item.getSelectedValue().toString());
             while (res.next()) {
                 hospId = res.getInt("id");
             }
-
-            // got staffID
             res = DB.db.staff(staff.get(ind).getLname(), staff.get(ind).getbDate());
             while (res.next()) {
                 staffId = res.getInt("id");
             }
-
-            //got schedule for staff and hospital
             res = DB.db.staffSchedule(staffId, hospId);
-            while (res.next()) {
-                String tmp = res.getString("workday");
-                if (tmp.equalsIgnoreCase("Sun")) {
-                    pane.setValueAt(res.getString("workhouram"), 0, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 0, 2);
-                }
-                if (tmp.equalsIgnoreCase("Mon")) {
-                    pane.setValueAt(res.getString("workhouram"), 1, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 1, 2);
-                }
-                if (tmp.equalsIgnoreCase("Tue")) {
-                    pane.setValueAt(res.getString("workhouram"), 2, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 2, 2);
-                }
-                if (tmp.equalsIgnoreCase("Wed")) {
-                    pane.setValueAt(res.getString("workhouram"), 3, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 3, 2);
-                }
-                if (tmp.equalsIgnoreCase("Thu")) {
-                    pane.setValueAt(res.getString("workhouram"), 4, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 4, 2);
-                }
-                if (tmp.equalsIgnoreCase("Fri")) {
-                    pane.setValueAt(res.getString("workhouram"), 5, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 5, 2);
-                }
-                if (tmp.equalsIgnoreCase("Sat")) {
-                    pane.setValueAt(res.getString("workhouram"), 6, 1);
-                    pane.setValueAt(res.getString("workhourpm"), 6, 2);
-                }
+            while (res.next()){
+                st.append(res.getString("workday"));
+                st.append("<br />");
+                st.append(res.getString("workhour"));
+                st.append("<br />");
             }
+            pane.setText(st.toString());
             DB.db.close();
         } catch (SQLException ex) {
             Logger.getLogger(Func.class.getName()).log(Level.SEVERE, null, ex);

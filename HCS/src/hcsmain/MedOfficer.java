@@ -49,9 +49,9 @@ public class MedOfficer {
         nursesPane.setLayout(new GridBagLayout());
         medAssistPane.setLayout(new GridBagLayout());
 
-        String[] labels = {"First Name", "Last Name", "Date of birth", 
-            "Social Security Number", "e-mail", "Address", "ZIP",
-            "Phone", "Position", "Qualification",};
+        String[] labels = {"First Name", "Last Name", "Date of birth", "e-mail",
+            "Address", "ZIP", "Phone", "Social Security Number", "Position",
+            "Qualification",};
 
         /*********************** Staff's record ****************************/
         this.doctors.doctor(labels, doctorsPane);

@@ -127,7 +127,8 @@ public class GUI {
     }
 
     private void checkLogin(String login, String passw){
-        MedOfficer fr = new MedOfficer();
+//        MedOfficer fr = new MedOfficer();
+        MedAssist fr = new MedAssist();
         fr.init();
         try {
                         Auth t = new Auth(login, passw);
